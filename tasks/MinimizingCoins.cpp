@@ -30,14 +30,39 @@ T LCM(T a, T b) { return (a * b) / GCD(a, b); }
 
 template<typename T>
 std::ostream &operator<<(std::ostream &os, const std::vector<T> &v) {
-    for (auto ob : v) os << ob << " ";
+    for (auto ob: v) os << ob << " ";
     return os;
 }
 
 using namespace std;
 
-class %ClassName% {
+class MinimizingCoins {
+
+    vector<int> coins, dp;
+
+    int miniCoins(int amount) {
+        if (amount < 0) return P_INF;
+        else if (amount == 0) return 0;
+        else if (dp[amount] != -1) return dp[amount];
+
+        int cur = 0, mini = P_INF;
+        for (int i = 0; i < coins.size(); ++i) {
+            cur = 1 + miniCoins(amount - coins[i]);
+            mini = min(mini, cur);
+        }
+        return dp[amount] = mini;
+    }
+
 public:
     void solve(std::istream &in, std::ostream &out) {
+        int n, x;
+        in >> n >> x;
+        coins.resize(n);
+        dp.resize(x + 1, -1);
+        for (int &x: coins) in >> x;
+
+        int mini = miniCoins(x);
+        if (mini == P_INF) out << -1 << endl;
+        else out << mini << endl;
     }
 };
